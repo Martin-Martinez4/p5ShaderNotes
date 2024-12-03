@@ -6,6 +6,7 @@ precision mediump float;
 // This “vec3 aPosition” is a built in shader functionality. You must keep that naming.
 // It automatically gets the position of every vertex on your canvas
 attribute vec3 aPosition;
+attribute vec2 aTexCoord;
 
 // We always must do at least one thing in the vertex shader:
 // tell the pixel where on the screen it lives:

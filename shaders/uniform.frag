@@ -16,10 +16,11 @@ void main(){
     // so multiplying them will still make a new number between 0 and 1!
     float y = u_mouse.y * st.y;
     float x =  st.x * u_mouse.x;
+    float z = (y + x) / 0.9;
 
     // red mapped to x coord of mouse
     // green, mapped tp y coord of mouse
-    vec3 color = vec3(x, y, 0.0); 
+    vec3 color = vec3(x, y, z); 
 
     // gl_FragColor is a built in shader variable, and your .frag file must contain it
     // We are setting the vec3 color into a new vec4, with a transparency of 1 (no opacity)
