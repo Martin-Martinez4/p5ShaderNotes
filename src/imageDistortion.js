@@ -69,7 +69,7 @@ sketch.mouseReleased = function(){
 
 sketch.windowResized = function(){
 
-    resizeCanvas(windowWidth, windowHeight);
+    resizeCanvas(width, height);
   
 }
 

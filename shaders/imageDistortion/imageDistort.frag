@@ -12,20 +12,31 @@ uniform vec2 center;
 
 const float maxRadius = 0.25;
 
+float getCircleSDF(vec2 dir, vec2 aspect,float  t, float maxRadius){
+     float d = length(dir/aspect) - t * maxRadius;
+     return d;
+}
+
+float getSquareSDF(vec2 dir, vec2 aspect,float  t, float maxRadius){
+    vec2 d2 = abs(dir/aspect) - (t * maxRadius,t * maxRadius);
+    return length(max(d2, 0.0) + min(max(d2.x, d2.y), 0.0));
+
+}
+
 float getOffsetStrength(float t, vec2 dir){
-    float d = length(dir/aspect) - t * maxRadius; // SDF of circle
+    float d = getCircleSDF(dir, aspect, t, maxRadius);
 
     // mask the ripple
     d *=  1. - smoothstep(0.0, 0.05, abs(d)); 
 
     // smooth intro
     // increase distortion
-    d *= smoothstep(0., 0.05, t);
+    d *= smoothstep(0., 0.1, t);
 
     //  smoothstep is negative inside the circle and want the opposite, 1 - smoothstep is used
     // smooth outro
     // decrease distortion
-    d *= 1. - smoothstep(0.5, 1., t);
+    d *= 1. - smoothstep(0.5, .75, t);
 
     return d;
 }
@@ -43,9 +54,10 @@ void main(){
     vec2 dir = center - pos;
 
     // different offset for each color to create chromatic aberration
-    float rD = getOffsetStrength(t + 0.02, dir);
+    float tOffset = 0.05 * sin(t * 3.14);
+    float rD = getOffsetStrength(t + tOffset, dir);
     float gD = getOffsetStrength(t, dir);
-    float bD = getOffsetStrength(t - 0.02, dir);
+    float bD = getOffsetStrength(t - tOffset, dir);
 
     // float d = getOffsetStrength(t, dir);
 
@@ -56,9 +68,8 @@ void main(){
     float b = texture(image, pos + dir * bD).b;
 
     // color = texture(image, pos + dir * d);
-    float shading = gD * 2.;
+    float shading = gD * 8.;
   
-    // color = vec4(r, g, b, 1.);
     color = vec4(r, g, b, 1.);
     color.rgb += shading;
 }
